@@ -292,7 +292,7 @@ async function drawLeftThird(
     size: number
 ) {
     const half = size / 2;
-    const smaller = half * 1.02;
+    const smaller = half * 0.95;
     ctx.save();
     ctx.beginPath();
     ctx.moveTo(x, y);
@@ -304,7 +304,7 @@ async function drawLeftThird(
     if (icon.full) {
         await drawImg(ctx, icon, img, x, y, size);
     } else {
-        await drawImg(ctx, icon, img, x, y, smaller);
+        await drawImg(ctx, icon, img, x + 5, y, smaller);
     }
     ctx.restore();
 }
@@ -318,7 +318,7 @@ async function drawRightThird(
     size: number
 ) {
     const half = size / 2;
-    const smaller = half * 1.02;
+    const smaller = half * 0.95;
     ctx.save();
     ctx.beginPath();
     ctx.moveTo(x + half, y);
@@ -344,7 +344,7 @@ async function drawBottomThird(
     size: number
 ) {
     const half = size / 2;
-    const smaller = half * 0.95;
+    const smaller = half * 0.9;
     ctx.save();
     ctx.beginPath();
     ctx.moveTo(x, y + size);
