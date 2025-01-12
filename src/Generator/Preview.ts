@@ -304,7 +304,7 @@ async function drawLeftThird(
     if (icon.full) {
         await drawImg(ctx, icon, img, x, y, size);
     } else {
-        await drawImg(ctx, icon, img, x + 5, y, smaller);
+        await drawImg(ctx, icon, img, x, y, smaller);
     }
     ctx.restore();
 }
@@ -330,7 +330,7 @@ async function drawRightThird(
     if (icon.full) {
         await drawImg(ctx, icon, img, x, y, size);
     } else {
-        await drawImg(ctx, icon, img, x + size - smaller + 3, y, smaller);
+        await drawImg(ctx, icon, img, x + size - smaller, y, smaller);
     }
     ctx.restore();
 }
