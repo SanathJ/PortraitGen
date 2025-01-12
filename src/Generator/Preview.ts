@@ -17,6 +17,9 @@ const noteHeight = 45;
 const noteFont = 'bold 25px "Arial"';
 const nameFont = 'bold 17px "Arial"';
 
+const altThreeImgRendering = true;
+// const areaSplit = true; // vs equal angles
+
 export default async function Preview({
     active,
     background,
@@ -44,10 +47,10 @@ export default async function Preview({
             :   bottomOffset + framePad
         :   0);
 
-    // function getName(x: PortraitIcon) : string{
-    //     return `${x.name}${x.others ? '+' + x.others.map((x) => getName(x)).join('+') : ''}`;
-    // }
-    // const list = active.map((x) => getName(x)).join(' - ');
+    function getName(x: PortraitIcon): string {
+        return `${x.name}${x.others ? '+' + x.others.map((x) => getName(x)).join('+') : ''}`;
+    }
+    const list = active.map((x) => getName(x)).join(' - ');
 
     const canvas = createCanvas(totalWidth, totalHeight);
     const ctx = canvas.getContext('2d');
@@ -89,7 +92,7 @@ export default async function Preview({
         await drawIcon(ctx, icon, x, y, portraitSize, names);
     }
 
-    return canvas.toDataURL();
+    return [canvas.toDataURL(), list];
 }
 
 async function drawIcon(
@@ -112,32 +115,67 @@ async function drawIcon(
 
             drawDiagonal(ctx, x, y, size);
         } else {
-            // 3/4 images
-            await drawTopCenter(ctx, icon, baseImage, x, y, size);
+            if (altThreeImgRendering && icon.others.length == 2) {
+                await drawBottomThird(ctx, icon, baseImage, x, y, size);
 
-            const secondIcon = icon.others[0];
-            const second = await loadImage(secondIcon.path);
-            await drawLeftCenter(ctx, secondIcon, second, x, y, size);
+                const secondIcon = icon.others[0];
+                const second = await loadImage(secondIcon.path);
+                await drawLeftThird(ctx, secondIcon, second, x, y, size);
 
-            const thirdIcon = icon.others[1];
-            const third = await loadImage(thirdIcon.path);
-            if (icon.others.length == 2) {
-                // 3 images
-                await drawBottomHalf(ctx, thirdIcon, third, x, y, size);
+                const thirdIcon = icon.others[1];
+                const third = await loadImage(thirdIcon.path);
+                await drawRightThird(ctx, thirdIcon, third, x, y, size);
 
-                drawDiagonal(ctx, x, y, size);
-                drawTLHalfDiagonal(ctx, x, y, size);
+                // draw diagonals
+                await drawLine(
+                    ctx,
+                    x + size / 2 - 1,
+                    y + size / 2 - 1,
+                    x + size / 2 - 1,
+                    y + lineOffset
+                );
+                await drawLine(
+                    ctx,
+                    x + size / 2 - 1,
+                    y + size / 2 - 1,
+                    x + lineOffset,
+                    y + lineOffset + (5 * (size - 2 * lineOffset)) / 6
+                );
+                await drawLine(
+                    ctx,
+                    x + size / 2 - 1,
+                    y + size / 2 - 1,
+                    x + size - lineOffset,
+                    y + lineOffset + (5 * (size - 2 * lineOffset)) / 6
+                );
             } else {
-                // 4 images
-                await drawRightCenter(ctx, thirdIcon, third, x, y, size);
+                // 3/4 images
+                await drawTopCenter(ctx, icon, baseImage, x, y, size);
 
-                const fourthIcon = icon.others[2];
-                const fourth = await loadImage(fourthIcon.path);
+                const secondIcon = icon.others[0];
+                const second = await loadImage(secondIcon.path);
+                await drawLeftCenter(ctx, secondIcon, second, x, y, size);
 
-                await drawBottomCenter(ctx, fourthIcon, fourth, x, y, size);
+                const thirdIcon = icon.others[1];
+                const third = await loadImage(thirdIcon.path);
+                if (icon.others.length == 2) {
+                    // 3 images
+                    await drawBottomHalf(ctx, thirdIcon, third, x, y, size);
 
-                drawDiagonal(ctx, x, y, size);
-                drawTLDiagonal(ctx, x, y, size);
+                    drawDiagonal(ctx, x, y, size);
+                    drawTLHalfDiagonal(ctx, x, y, size);
+                } else {
+                    // 4 images
+                    await drawRightCenter(ctx, thirdIcon, third, x, y, size);
+
+                    const fourthIcon = icon.others[2];
+                    const fourth = await loadImage(fourthIcon.path);
+
+                    await drawBottomCenter(ctx, fourthIcon, fourth, x, y, size);
+
+                    drawDiagonal(ctx, x, y, size);
+                    drawTLDiagonal(ctx, x, y, size);
+                }
             }
         }
     } else {
@@ -241,6 +279,92 @@ async function drawTopHalf(
         await drawImg(ctx, icon, img, x, y, size);
     } else {
         await drawImg(ctx, icon, img, x, y, half);
+    }
+    ctx.restore();
+}
+
+async function drawLeftThird(
+    ctx: CanvasRenderingContext2D,
+    icon: PortraitIcon,
+    img: HTMLImageElement,
+    x: number,
+    y: number,
+    size: number
+) {
+    const half = size / 2;
+    const smaller = half * 1.02;
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + half, y);
+    ctx.lineTo(x + half, y + half);
+    ctx.lineTo(x, y + (5 * size) / 6);
+    ctx.lineTo(x, y);
+    ctx.clip();
+    if (icon.full) {
+        await drawImg(ctx, icon, img, x, y, size);
+    } else {
+        await drawImg(ctx, icon, img, x, y, smaller);
+    }
+    ctx.restore();
+}
+
+async function drawRightThird(
+    ctx: CanvasRenderingContext2D,
+    icon: PortraitIcon,
+    img: HTMLImageElement,
+    x: number,
+    y: number,
+    size: number
+) {
+    const half = size / 2;
+    const smaller = half * 1.02;
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(x + half, y);
+    ctx.lineTo(x + size, y);
+    ctx.lineTo(x + size, y + (5 * size) / 6);
+    ctx.lineTo(x + half, y + half);
+    ctx.lineTo(x + half, y);
+    ctx.clip();
+    if (icon.full) {
+        await drawImg(ctx, icon, img, x, y, size);
+    } else {
+        await drawImg(ctx, icon, img, x + size - smaller + 3, y, smaller);
+    }
+    ctx.restore();
+}
+
+async function drawBottomThird(
+    ctx: CanvasRenderingContext2D,
+    icon: PortraitIcon,
+    img: HTMLImageElement,
+    x: number,
+    y: number,
+    size: number
+) {
+    const half = size / 2;
+    const smaller = half * 0.95;
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(x, y + size);
+    ctx.lineTo(x, y + (5 * size) / 6);
+    ctx.lineTo(x + half, y + half);
+    ctx.lineTo(x + size, y + (5 * size) / 6);
+    ctx.lineTo(x + size, y + size);
+    ctx.lineTo(x, y + size);
+    ctx.clip();
+    if (icon.full) {
+        await drawImg(ctx, icon, img, x, y, size);
+    } else {
+        await drawImg(
+            ctx,
+            icon,
+            img,
+            x + half - smaller / 2,
+            y + size - smaller,
+            smaller
+        );
     }
     ctx.restore();
 }
@@ -395,6 +519,21 @@ function drawTLDiagonal(
     ctx.beginPath();
     ctx.moveTo(x + lineOffset, y + lineOffset);
     ctx.lineTo(x + size - lineOffset, y + size - lineOffset);
+    ctx.stroke();
+}
+
+function drawLine(
+    ctx: CanvasRenderingContext2D,
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number
+) {
+    ctx.strokeStyle = '#FFFFFF';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
     ctx.stroke();
 }
 
