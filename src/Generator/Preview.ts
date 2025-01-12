@@ -116,15 +116,15 @@ async function drawIcon(
             drawDiagonal(ctx, x, y, size);
         } else {
             if (altThreeImgRendering && icon.others.length == 2) {
-                await drawBottomThird(ctx, icon, baseImage, x, y, size);
+                await drawLeftThird(ctx, icon, baseImage, x, y, size);
 
                 const secondIcon = icon.others[0];
                 const second = await loadImage(secondIcon.path);
-                await drawLeftThird(ctx, secondIcon, second, x, y, size);
+                await drawRightThird(ctx, secondIcon, second, x, y, size);
 
                 const thirdIcon = icon.others[1];
                 const third = await loadImage(thirdIcon.path);
-                await drawRightThird(ctx, thirdIcon, third, x, y, size);
+                await drawBottomThird(ctx, thirdIcon, third, x, y, size);
 
                 // draw diagonals
                 await drawLine(
