@@ -63,7 +63,6 @@ export function findFuzzyBestCandidates<Type>(
             e.length / 100 +
             1
     );
-    const max = Math.max(...dists);
 
     const ans = target
         .map((t, i) => {
@@ -73,7 +72,6 @@ export function findFuzzyBestCandidates<Type>(
             };
         })
         .sort((a, b) => b.d - a.d)
-        .filter((e, i) => i < amount && e.d > max * 0.65)
         .map(({ t, d }) => {
             if (
                 searchClean(t).startsWith(cleaned.substring(0, 3)) ||
@@ -87,6 +85,7 @@ export function findFuzzyBestCandidates<Type>(
             return { t, d };
         })
         .sort((a, b) => b.d - a.d)
+        .filter((e, i) => i < amount)
         .map((e) => e.t);
 
     if (returnArr && predicate) {
