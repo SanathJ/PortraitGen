@@ -1,14 +1,13 @@
+import { writeFileSync } from 'node:fs';
 import { PortraitIcon } from './Generator';
 import Preview from './Generator/Preview';
 import { addSingle, addMulti } from './util';
 
-import * as fs from 'node:fs';
-
 const arr: PortraitIcon[] = [];
-arr.push(addSingle('Hu_Tao', true));
+arr.push(addSingle('Tao', true));
 arr.push(addSingle('Furina', true));
-arr.push(addMulti(['Yelan', 'Xingqiu']));
-arr.push(addMulti(['Xilonen', 'Jean', 'Bennett']));
+arr.push(addMulti(['Yelan', 'XQ']));
+arr.push(addMulti(['Xilo', 'Jean', 'Benny']));
 
 const options = {
     active: arr,
@@ -23,7 +22,7 @@ async function main() {
     const img = data.replace(/^data:image\/\w+;base64,/, '');
 
     const buf = Buffer.from(img, 'base64');
-    fs.writeFileSync(`output/Portraits ${list}.png`, buf);
+    writeFileSync(`output/Portraits ${list}.png`, buf);
 }
 
 main();

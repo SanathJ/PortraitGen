@@ -1,3 +1,5 @@
+import { readdirSync } from 'node:fs';
+import { parse } from 'node:path';
 export interface PortraitIcon {
     name: string;
     path: string;
@@ -10,116 +12,104 @@ export interface PortraitIcon {
     others?: PortraitIcon[];
 }
 
+export interface Icon {
+    name: string;
+    path: string;
+    type: 'artifact' | 'character' | 'element' | 'weapon';
+}
+
 export function filename(name: string) {
     return name.replace(/ /g, '_').replace(/:|"|'/g, '');
 }
 
-export const elements = [
-    {
-        name: 'Anemo',
-        path: './img/elements/anemo.png',
-    },
-    {
-        name: 'Cryo',
-        path: './img/elements/cryo.png',
-    },
-    {
-        name: 'Dendro',
-        path: './img/elements/dendro.png',
-    },
-    {
-        name: 'Electro',
-        path: './img/elements/electro.png',
-    },
-    {
-        name: 'Geo',
-        path: './img/elements/geo.png',
-    },
-    {
-        name: 'Hydro',
-        path: './img/elements/hydro.png',
-    },
-    {
-        name: 'Pyro',
-        path: './img/elements/pyro.png',
-    },
-];
+export class Names {
+    static names: Icon[];
 
-const travelers = [
-    {
-        name: 'Aether',
-        path: '/img/characters/icon/Aether.png',
-    },
-    {
-        name: 'Lumine',
-        path: '/img/characters/icon/Lumine.png',
-    },
-];
+    static {
+        Names.names = [
+            // artifacts
+            ...readdirSync('./img/artifacts/icon').map(
+                (e) =>
+                    ({
+                        name: parse(e).name,
+                        path: `./img/artifacts/icon/${e}`,
+                        type: 'artifact',
+                    }) as Icon
+            ),
 
-export default function PortraitGenerator({
-    charIcons,
-    artiIcons,
-    weaponIcons,
-}: {
-    charIcons: Record<string, string[]>;
-    artiIcons: Record<string, string[]>;
-    weaponIcons: Record<string, string[]>;
-}) {
-    const iconsMisc = [
-        {
-            name: 'Fill slot',
-            path: '/img/characters/abstract-user-flat-3-colored.svg',
-        },
-        ...travelers,
-    ];
+            // characters
+            ...readdirSync('./img/characters/icon').map(
+                (e) =>
+                    ({
+                        name: parse(e).name,
+                        path: `./img/characters/icon/${e}`,
+                        type: 'character',
+                    }) as Icon
+            ),
+            // fill character
+            {
+                name: 'Fill slot',
+                path: '/img/characters/abstract-user-flat-3-colored.svg',
+                type: 'character',
+            } as Icon,
+            // travellers
+            {
+                name: 'Aether',
+                path: '/img/characters/icon/Aether.png',
+                type: 'character',
+            },
+            {
+                name: 'Lumine',
+                path: '/img/characters/icon/Lumine.png',
+                type: 'character',
+            },
 
-    const iconsChar = Object.entries(charIcons)
-        .sort((a, b) => a[0].localeCompare(b[0]))
-        .map(([element, icons]) => ({
-            element,
-            chars: icons.sort().map((name) => ({
-                name,
-                path: `/img/characters/icon/${filename(name)}.png`,
-            })),
-            travelerIcons: elements
-                .filter((x) => x.name == element)
-                .flatMap((relevant) =>
-                    travelers.map((traveler) => ({
-                        ...traveler,
-                        name: `${traveler.name} (${relevant.name})`,
-                        elementalIcon: relevant,
-                    }))
-                ),
-        }));
+            // elements
+            {
+                name: 'Anemo',
+                path: './img/elements/anemo.png',
+                type: 'element',
+            },
+            {
+                name: 'Cryo',
+                path: './img/elements/cryo.png',
+                type: 'element',
+            },
+            {
+                name: 'Dendro',
+                path: './img/elements/dendro.png',
+                type: 'element',
+            },
+            {
+                name: 'Electro',
+                path: './img/elements/electro.png',
+                type: 'element',
+            },
+            {
+                name: 'Geo',
+                path: './img/elements/geo.png',
+                type: 'element',
+            },
+            {
+                name: 'Hydro',
+                path: './img/elements/hydro.png',
+                type: 'element',
+            },
+            {
+                name: 'Pyro',
+                path: './img/elements/pyro.png',
+                type: 'element',
+            },
 
-    const iconsArtifacts = Object.entries(artiIcons)
-        .sort((a, b) => a[0].localeCompare(b[0]))
-        .map(([level, icons]) => ({
-            level,
-            icons: icons.map((name) => ({
-                name,
-                path: `/img/artifacts/icon/${filename(name)}.png`,
-                full: true,
-            })),
-        }));
-
-    const iconsWeapons = Object.entries(weaponIcons)
-        .sort((a, b) => a[0].localeCompare(b[0]))
-        .map(([type, icons]) => ({
-            type,
-            icons: icons.map((name) => ({
-                name,
-                path: `/img/weapons/icon_ascended/${filename(name)}.png`,
-                // full: true
-            })),
-        }));
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const allIcons: PortraitIcon[] = [
-        ...iconsChar.flatMap((x) => [...x.chars, ...x.travelerIcons]),
-        ...elements,
-        ...iconsArtifacts.flatMap((x) => x.icons),
-        ...iconsWeapons.flatMap((x) => x.icons),
-        ...iconsMisc,
-    ];
+            // weapons
+            ...readdirSync('./img/weapons/icon_ascended').map(
+                (e) =>
+                    ({
+                        name: parse(e).name,
+                        path: `./img/weapons/icon_ascended/${e}`,
+                        type: 'weapon',
+                    }) as Icon
+            ),
+        ];
+    }
 }
