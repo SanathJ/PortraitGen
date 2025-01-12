@@ -5,10 +5,10 @@ import { addSingle, addMulti } from './util';
 import * as fs from 'node:fs';
 
 const arr: PortraitIcon[] = [];
-arr.push(addSingle('Clorinde', true));
-arr.push(addSingle('Fischl', true));
-arr.push(addMulti(['Kirara', 'Nahida']));
-arr.push(addMulti(['Kaedehara_Kazuha', 'Sucrose', 'Xilonen']));
+arr.push(addSingle('Hu_Tao', true));
+arr.push(addSingle('Furina', true));
+arr.push(addMulti(['Yelan', 'Xingqiu']));
+arr.push(addMulti(['Xilonen', 'Jean', 'Bennett']));
 
 const options = {
     active: arr,

@@ -4,3 +4,9 @@
 - Fill Slot Icon: [Free SVG](https://freesvg.org/user-icon-picture)
 - Other Images: Taken from Keqing Mains, credit to Hoyo
 - Based on code from [Keqing Mains](https://github.com/KQM-git/TCL/tree/master) and [muakasan](https://github.com/muakasan/genshin-portraits)
+
+# Instructions
+
+Edit `src/index.ts` to generate the appropriate portraits.
+
+Run `npm run start` to generate image in `output/`.
