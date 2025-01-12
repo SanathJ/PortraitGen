@@ -23,7 +23,7 @@ async function main() {
     const img = data.replace(/^data:image\/\w+;base64,/, '');
 
     const buf = Buffer.from(img, 'base64');
-    fs.writeFileSync(`output/myPortraits ${list}.png`, buf);
+    fs.writeFileSync(`output/Portraits ${list}.png`, buf);
 }
 
 main();
