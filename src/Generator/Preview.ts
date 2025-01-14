@@ -182,22 +182,6 @@ async function drawIcon(
         // Draw singular
         drawImg(ctx, icon, baseImage, x, y, size);
 
-        if (icon.note) {
-            const noteX = x + portraitPad / 2 + size;
-            const noteY = y - portraitPad / 2;
-
-            ctx.font = noteFont;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-
-            const w = ctx.measureText(icon.note).width + noteExtraWidth;
-            ctx.fillStyle = '#47446B';
-            roundRect(ctx, noteX - w, noteY, w, noteHeight);
-
-            ctx.fillStyle = '#FFFFFF';
-            ctx.fillText(icon.note, noteX - w / 2, noteY + noteHeight / 2);
-        }
-
         if (names) {
             ctx.font = nameFont;
             ctx.textAlign = 'center';
@@ -213,6 +197,23 @@ async function drawIcon(
                 20
             ).forEach(([text, x, y]) => ctx.fillText(text, x, y));
         }
+    }
+
+    if (icon.note) {
+        const noteX = x + portraitPad / 2 + size;
+        const noteY = y - portraitPad / 2;
+
+        ctx.font = noteFont;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        const w = ctx.measureText(icon.note).width + noteExtraWidth;
+        ctx.fillStyle = '#47446B';
+        ctx.strokeStyle = '#000000';
+        roundRect(ctx, noteX - w, noteY, w, noteHeight);
+
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillText(icon.note, noteX - w / 2, noteY + noteHeight / 2);
     }
 }
 

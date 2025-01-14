@@ -31,8 +31,17 @@ export function addSingle(
     return char;
 }
 
-export function addMulti(icons: string[], element?: (string | undefined)[]) {
-    const first = addSingle(icons[0], false, element ? element[0] : undefined);
+export function addMulti(
+    icons: string[],
+    element?: (string | undefined)[],
+    note?: string
+) {
+    const first = addSingle(
+        icons[0],
+        false,
+        element ? element[0] : undefined,
+        note
+    );
 
     for (let i = 1; i < icons.length; i++) {
         if (!first.others) first.others = [];

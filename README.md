@@ -26,12 +26,14 @@ addSingle(
 ```
 addMulti(
     icons: string[],
-    element?: (string | undefined)[]
+    element?: (string | undefined)[],
+    note?: string
 )
 ```
 
 - `icons` The names of the artifact, character, element, or weapon.
 - `element` If present, adds the symbol of the element to the portrait. Other entries in the array should be set to `undefined`.
+- `note` If present, adds a note to the portrait.
 
 Fuzzy search is present so names do not need to be accurate, however if a different character's portrait is generated, the character's full name may be required.
 
