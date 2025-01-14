@@ -2,7 +2,7 @@ import { Icon, Names, PortraitIcon, filename } from './Generator';
 
 export function addSingle(
     icon: string,
-    full: boolean,
+    full: boolean = true,
     element?: string,
     note?: string
 ) {

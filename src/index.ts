@@ -4,8 +4,8 @@ import Preview from './Generator/Preview';
 import { addSingle, addMulti } from './util';
 
 const arr: PortraitIcon[] = [];
-arr.push(addSingle('Tao', true));
-arr.push(addSingle('Furina', true));
+arr.push(addSingle('Tao'));
+arr.push(addSingle('Furina'));
 arr.push(addMulti(['Yelan', 'XQ']));
 arr.push(addMulti(['Xilo', 'Jean', 'Benny']));
 
