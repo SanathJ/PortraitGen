@@ -1,6 +1,6 @@
 {
   "name": "portraitgen",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Fork of KQM's portrait generator to allow 3 way splits",
   "main": "index.js",
   "scripts": {

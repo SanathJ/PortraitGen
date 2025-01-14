@@ -7,7 +7,7 @@ Tested with Node.js v22.13.0 and Typescript v5.7.3. See package.json for more de
 Edit `src/index.ts` for the required portraits:  
 **util#addSingle**
 
-```
+```ts
 addSingle(
     icon: string,
     full: boolean = true,
@@ -23,7 +23,7 @@ addSingle(
 
 **util#addMulti**
 
-```
+```ts
 addMulti(
     icons: string[],
     element?: (string | undefined)[],
@@ -35,7 +35,8 @@ addMulti(
 - `element` If present, adds the symbol of the element to the portrait. Other entries in the array should be set to `undefined`.
 - `note` If present, adds a note to the portrait.
 
-Fuzzy search is present so names do not need to be accurate, however if a different character's portrait is generated, the character's full name may be required.
+> [!NOTE]
+> Fuzzy search is present so names do not need to be accurate, however if a different character's portrait is generated, the character's full name may be required.
 
 Run `npm run start` to generate image in `output/`.
 
